@@ -1,14 +1,14 @@
 server:
-  port: 8040
+  port: 8020
 
 # 数据库的连接新
 spring:
   application:
-    name: mall-product
+    name: mall-member
   datasource:
     username: root
     password: root
-    url: jdbc:mysql://120.26.4.95:3306/msbmall_pms
+    url: jdbc:mysql://120.26.4.95:3306/msbmall_ums
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 mybatis-plus:
