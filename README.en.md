@@ -1,7 +1,11 @@
 # msb-mall
 
+### 启动Nacos
+cd /Users/adam/Software/nacos/bin  
+sh startup.sh -m standalone
+
 #### Description
-马士兵分布式三高商城系统
+分布式三高商城系统
 
 #### Software Architecture
 Software architecture description
