@@ -10,6 +10,10 @@ spring:
     password: root
     url: jdbc:mysql://120.26.4.95:3306/msbmall_sms
     driver-class-name: com.mysql.cj.jdbc.Driver
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 120.26.4.95:8848
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml

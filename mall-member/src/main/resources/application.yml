@@ -5,6 +5,10 @@ server:
 spring:
   application:
     name: mall-member
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 120.26.4.95:8848
   datasource:
     username: root
     password: root
