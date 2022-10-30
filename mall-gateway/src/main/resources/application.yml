@@ -11,13 +11,17 @@ spring:
     gateway:
       routes:
         - id: product_route
-          uri: http://localhost:8848/nacos/
+          uri: lb://mall-product
           predicates:
-            - Path=/app
-        - id: test_route
-          uri: https://www.baidu.com
+            - Path=/app/product/**
+          filters:
+            - RewritePath=/app/(?<segment>/?.*), /$\{segment}
+        - id: app_route
+          uri: lb://renren-fast
           predicates:
-            - Query=url,baidu
+            - Path=/app/**
+          filters:
+            - RewritePath=/app/(?<segment>/?.*), /renren-fast/$\{segment}
 
 
 
