@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.msb.mall</groupId>
-    <artifactId>mall-producet</artifactId>
+    <artifactId>mall-product</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>mall-product</name>
     <description>Demo project for Spring Boot</description>
