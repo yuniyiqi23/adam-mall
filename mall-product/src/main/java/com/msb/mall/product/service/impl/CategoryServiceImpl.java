@@ -1,5 +1,7 @@
 package com.msb.mall.product.service.impl;
 
+import com.msb.mall.product.service.CategoryBrandRelationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,10 +17,15 @@ import com.msb.common.utils.Query;
 import com.msb.mall.product.dao.CategoryDao;
 import com.msb.mall.product.entity.CategoryEntity;
 import com.msb.mall.product.service.CategoryService;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
+    @Autowired
+    CategoryBrandRelationService categoryBrandRelationService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -51,6 +58,18 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                 }).collect(Collectors.toList());
         // 第二步根据大类找到对应的所有的小类
         return list;
+    }
+
+    @Transactional
+    @Override
+    public void updateDetail(CategoryEntity category) {
+        // 更新类别名称
+        this.updateById(category);
+        if(!StringUtils.isEmpty(category.getName())){
+            // 同步更新级联的数据
+            categoryBrandRelationService.updateCatelogName(category.getCatId(),category.getName());
+            // TODO 同步更新其他的冗余数据
+        }
     }
 
     /**
