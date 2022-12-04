@@ -4,6 +4,8 @@ import com.msb.mall.product.service.CategoryBrandRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -51,7 +53,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         List<CategoryEntity> list = categoryEntities.stream().filter(categoryEntity -> categoryEntity.getParentCid() == 0)
                 .map(categoryEntity -> {
                     // 根据大类找到多有的小类  递归的方式实现
-                    categoryEntity.setChildrens(getCategoryChildrens(categoryEntity,categoryEntities));
+                    categoryEntity.setChildren(getCategoryChildrens(categoryEntity, categoryEntities));
                     return categoryEntity;
                 }).sorted((entity1, entity2) -> {
                     return (entity1.getSort() == null ? 0 : entity1.getSort()) - (entity2.getSort() == null ? 0 : entity2.getSort());
@@ -65,16 +67,37 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     public void updateDetail(CategoryEntity category) {
         // 更新类别名称
         this.updateById(category);
-        if(!StringUtils.isEmpty(category.getName())){
+        if (!StringUtils.isEmpty(category.getName())) {
             // 同步更新级联的数据
-            categoryBrandRelationService.updateCatelogName(category.getCatId(),category.getName());
+            categoryBrandRelationService.updateCatelogName(category.getCatId(), category.getName());
             // TODO 同步更新其他的冗余数据
         }
     }
 
+    @Override
+    public Long[] getPathById(Long catelogId) {
+        List<Long> pathList = new ArrayList<>();
+        // 获取三级分类
+        getParentId(pathList, catelogId);
+        // 分类数据排序
+        Collections.reverse(pathList);
+        return pathList.toArray(new Long[pathList.size()]);
+    }
+
+    private List<Long> getParentId(List<Long> pathList, Long catelogId) {
+        pathList.add(catelogId);
+        CategoryEntity categoryEntity = this.getById(catelogId);
+        Long parentCid = categoryEntity.getParentCid();
+        if (parentCid != 0) {
+            getParentId(pathList, parentCid);
+        }
+        return pathList;
+    }
+
     /**
-     *  查找该大类下的所有的小类  递归查找
-     * @param categoryEntity 某个大类
+     * 查找该大类下的所有的小类  递归查找
+     *
+     * @param categoryEntity   某个大类
      * @param categoryEntities 所有的类别数据
      * @return
      */
@@ -82,10 +105,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             , List<CategoryEntity> categoryEntities) {
         List<CategoryEntity> collect = categoryEntities.stream().filter(entity -> {
             // 根据大类找到他的直属的小类
-            return entity.getParentCid().equals(categoryEntity.getCatId()) ;
+            return entity.getParentCid().equals(categoryEntity.getCatId());
         }).map(entity -> {
             // 根据这个小类递归找到对应的小小类
-            entity.setChildrens(getCategoryChildrens(entity, categoryEntities));
+            entity.setChildren(getCategoryChildrens(entity, categoryEntities));
             return entity;
         }).sorted((entity1, entity2) -> {
             return (entity1.getSort() == null ? 0 : entity1.getSort()) - (entity2.getSort() == null ? 0 : entity2.getSort());
