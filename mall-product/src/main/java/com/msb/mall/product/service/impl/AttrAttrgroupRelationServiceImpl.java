@@ -2,6 +2,7 @@ package com.msb.mall.product.service.impl;
 
 import com.msb.mall.product.vo.AttrGroupRelationVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,6 +41,16 @@ public class AttrAttrgroupRelationServiceImpl extends ServiceImpl<AttrAttrgroupR
             return entity;
         }).collect(Collectors.toList());
         this.saveBatch(collect);
+    }
+
+    @Override
+    public void deleteRelations(List<AttrGroupRelationVO> vos) {
+        List<AttrAttrgroupRelationEntity> collect = vos.stream().map((m) -> {
+            AttrAttrgroupRelationEntity entity = new AttrAttrgroupRelationEntity();
+            BeanUtils.copyProperties(m, entity);
+            return entity;
+        }).collect(Collectors.toList());
+        this.baseMapper.removeBatchRelation(collect);
     }
 
 }

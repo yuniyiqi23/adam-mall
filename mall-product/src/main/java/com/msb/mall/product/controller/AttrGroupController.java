@@ -36,6 +36,14 @@ public class AttrGroupController {
     @Autowired
     private AttrAttrgroupRelationService relationService;
 
+    // product/attrgroup/attr/relation/delete
+    @RequestMapping("/attr/relation/delete")
+    public R relationDelete(@RequestBody List<AttrGroupRelationVO> vos){
+        relationService.deleteRelations(vos);
+
+        return R.ok();
+    }
+
     // product/attrgroup/1/attr/relation?t=1670157832729
     @RequestMapping("/{attrGroupId}/attr/relation")
     public R attrRelation(@PathVariable("attrGroupId") Long attrGroupId){
