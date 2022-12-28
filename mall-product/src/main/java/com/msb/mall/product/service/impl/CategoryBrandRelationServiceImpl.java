@@ -28,6 +28,8 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
     CategoryService categoryService;
     @Autowired
     BrandService brandService;
+    @Autowired
+    private CategoryBrandRelationDao relationDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -68,6 +70,21 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
         entity.setCatelogId(catId);
         entity.setCatelogName(name);
         this.update(entity, new QueryWrapper<CategoryBrandRelationEntity>().eq("catelog_id",catId));
+    }
+
+    @Override
+    public List<CategoryBrandRelationEntity> categroyBrandRelation(Long catId) {
+        // 找到所有的品牌信息
+        List<CategoryBrandRelationEntity> list = relationDao
+                .selectList(new QueryWrapper<CategoryBrandRelationEntity>()
+                        .eq("catelog_id", catId));
+        /*List<BrandEntity> collect = list.stream().map((m) -> {
+            BrandEntity entity = new BrandEntity();
+            entity.setName(m.getBrandName());
+            entity.setBrandId(m.getBrandId());
+            return entity;
+        }).collect(Collectors.toList());*/
+        return list;
     }
 
 }

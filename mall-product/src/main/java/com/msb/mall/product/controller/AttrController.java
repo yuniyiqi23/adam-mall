@@ -3,6 +3,8 @@ package com.msb.mall.product.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.msb.mall.product.vo.AttrResponseVo;
+import com.msb.mall.product.vo.AttrVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +32,15 @@ public class AttrController {
     @Autowired
     private AttrService attrService;
 
+    // product/attr/base/list/0?t=1670746965416&page=1&limit=10&key=
+    @RequestMapping("/base/list/{catelogId}")
+    public R baseList(@PathVariable("catelogId") Long catelogId,
+                      @RequestParam Map<String, Object> params){
+        PageUtils page = attrService.queryBasePage(catelogId, params);
+
+        return R.ok().put("page", page);
+    }
+
     /**
      * 列表
      */
@@ -48,7 +59,7 @@ public class AttrController {
     @RequestMapping("/info/{attrId}")
     //@RequiresPermissions("product:attr:info")
     public R info(@PathVariable("attrId") Long attrId){
-		AttrEntity attr = attrService.getById(attrId);
+        AttrResponseVo attr = attrService.getDetailById(attrId);
 
         return R.ok().put("attr", attr);
     }
@@ -58,9 +69,8 @@ public class AttrController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("product:attr:save")
-    public R save(@RequestBody AttrEntity attr){
-		attrService.save(attr);
-
+    public R save(@RequestBody AttrVO vo){
+        attrService.saveAttr(vo);
         return R.ok();
     }
 
@@ -69,9 +79,9 @@ public class AttrController {
      */
     @RequestMapping("/update")
     //@RequiresPermissions("product:attr:update")
-    public R update(@RequestBody AttrEntity attr){
-		attrService.updateById(attr);
-
+    public R update(@RequestBody AttrVO attr){
+        // attrService.updateById(attr);
+        attrService.updateBaseAttr(attr);
         return R.ok();
     }
 

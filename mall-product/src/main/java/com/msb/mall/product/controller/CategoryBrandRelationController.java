@@ -6,11 +6,7 @@ import java.util.Map;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.msb.mall.product.entity.CategoryBrandRelationEntity;
 import com.msb.mall.product.service.CategoryBrandRelationService;
@@ -31,6 +27,13 @@ import com.msb.common.utils.R;
 public class CategoryBrandRelationController {
     @Autowired
     private CategoryBrandRelationService categoryBrandRelationService;
+
+    // product/categorybrandrelation/brands/list?t=1672232393900&catId=225
+    @GetMapping("/brands/list")
+    public R categoryBrandRelation(@RequestParam(value = "catId",required = true,defaultValue = "0") Long catId){
+        List<CategoryBrandRelationEntity> list = categoryBrandRelationService.categroyBrandRelation(catId);
+        return R.ok().put("data",list);
+    }
 
     /**
      * 列表
